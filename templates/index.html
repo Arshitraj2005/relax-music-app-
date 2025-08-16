@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Relax Music Generator</title>
+    <title>Relax Music Generator</title>
 </head>
 <body>
-  <h1>🧘‍♂️ Relaxing Music Based on Weather</h1>
-  <p><strong>Current Weather:</strong> {{ weather }}</p>
-  <p>🎶 Music is being generated...</p>
-  <audio controls>
-    <source src="/static/audio/generated_track.wav" type="audio/wav">
-    Your browser does not support the audio element.
-  </audio>
-  <br><br>
-  <a href="/static/audio/generated_track.wav" download>⬇️ Download Your Track</a>
+    <h1>Relaxing Music Generator</h1>
+    <form action="/generate">
+        <button type="submit">Generate Music</button>
+    </form>
+
+    {% if generated %}
+    <h2>Your Track:</h2>
+    <audio controls>
+        <source src="{{ url_for('static', filename='audio/generated_track.wav') }}" type="audio/wav">
+    </audio>
+    <br>
+    <a href="/download">Download Track</a>
+    {% endif %}
 </body>
 </html>
