@@ -15,8 +15,7 @@ def generate():
 
 @app.route('/download')
 def download():
-    path = os.path.join('static', 'audio')
-    return send_from_directory(path, 'generated_track.wav', as_attachment=True)
+    return send_from_directory('static/audio', 'generated_track.wav', as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
