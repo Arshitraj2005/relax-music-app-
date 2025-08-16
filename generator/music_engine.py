@@ -1,35 +1,16 @@
-from pyo import *
-import time
+import numpy as np
+from scipy.io.wavfile import write
 import os
 
-def generate_music(weather):
-    s = Server().boot()
-    s.start()
+def generate_music():
+    os.makedirs("static/audio", exist_ok=True)
+    sample_rate = 44100  # Hz
+    duration = 10        # seconds
+    freq = 440.0         # A4 note
 
-    # Save path
-    output_path = "static/audio/generated_track.wav"
-    if os.path.exists(output_path):
-        os.remove(output_path)
+    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+    waveform = 0.5 * np.sin(2 * np.pi * freq * t)
 
-    # Recorder setup
-    rec = Record(Input(), filename=output_path, fileformat=0)
-    rec.start()
-
-    # Ambient logic
-    if "Rain" in weather:
-        freq = 220
-        texture = Noise(mul=0.05).mix(2).out()
-    elif "Haze" in weather:
-        freq = 330
-        texture = Sine(freq=330, mul=0.1).out()
-    else:
-        freq = 440
-        texture = Sine(freq=440, mul=0.2).out()
-
-    pad = Sine(freq=freq, mul=0.2).out()
-    time.sleep(10)
-
-    rec.stop()
-    pad.stop()
-    texture.stop()
-    s.stop()
+    # Convert to 16-bit PCM
+    audio = np.int16(waveform * 32767)
+    write("static/audio/generated_track.wav", sample_rate, audio)
